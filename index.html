@@ -1,36 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>My Website</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Your Name | Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
       margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
     }
-    .card {
-      background: #111827;
-      padding: 2rem;
-      border-radius: 12px;
-      max-width: 500px;
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1.5rem;
+      background: #020617;
+    }
+
+    a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 3rem 1.5rem;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
-    h1 { margin-bottom: 0.5rem; }
-    p { opacity: 0.85; }
+
+    h1 { font-size: 2.8rem; }
+    p { color: #9ca3af; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>🚀 My Site Is Live</h1>
-    <p>This website is hosted for free on GitHub Pages.</p>
-  </div>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="gallery.html">Gallery</a>
+  </nav>
+
+  <main class="container">
+    <h1>Your Name</h1>
+    <p>Welcome to my portfolio website.</p>
+  </main>
+
 </body>
 </html>
