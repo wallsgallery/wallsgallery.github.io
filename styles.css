@@ -1,0 +1,75 @@
+/* ====== GLOBAL ====== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #ffffff;
+  color: #000000;
+}
+
+/* ====== NAV ====== */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  background: transparent;
+  z-index: 10;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+  font-size: 0.9rem;
+}
+
+/* ====== HOME SCROLL ====== */
+.scroll {
+  padding-top: 80px;
+}
+
+.poster {
+  width: 100%;
+  margin-bottom: 6rem;
+}
+
+.poster img {
+  width: 100%;
+  display: block;
+}
+
+/* ====== GALLERY ====== */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  padding: 6rem 1.5rem;
+}
+
+.gallery img {
+  width: 100%;
+  cursor: pointer;
+}
+
+/* ====== LIGHTBOX ====== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+}
