@@ -269,48 +269,33 @@ body{
 
 /* ===== MOBILE ===== */
 @media (max-width: 860px){
-  .gallery-layout{
-    grid-template-columns: 1fr;
+   body {
+    overflow-x: hidden;
   }
 
-  .sidebar{
-    border-right: 0;
-    border-bottom: 1px solid var(--nav-border);
-    padding: 10px 0;
-  }
-
+  /* ===== FILTER BAR (keep horizontal scroll) ===== */
   .sidebar-inner{
-    position: static;
-    padding: 0 var(--page-pad);
-    flex-direction: row;
     overflow-x: auto;
-    gap: 12px;
-    align-items: center;
-    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .filter-list{
-    flex-direction: row;
-    gap: 12px;
+  /* ===== WORKS GRID: 2 columns, vertical scroll ===== */
+  .grid{
+    grid-template-columns: repeat(2, 1fr); /* exactly 2 per row */
   }
 
-  .filterbtn{
-    padding: 8px 10px;
+  /* Ensure media never overflows */
+  .thumb,
+  .thumb img,
+  .ytwrap{
+    width: 100%;
+    max-width: 100%;
   }
-  /* ===== SHARED IMAGE VIEW PAGES (/view/*.html) ===== */
-.viewer {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px var(--page-pad) 28px;
-}
 
-.viewer img {
-  max-width: 96vw;
-  max-height: 86vh; /* leaves room for the sticky nav */
-  display: block;
-}
+  /* Prevent grid container from causing horizontal scroll */
+  .gridwrap{
+    overflow-x: hidden;
+  }
 
 }
 
