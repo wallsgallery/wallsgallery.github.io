@@ -39,6 +39,12 @@ a:focus{
   -webkit-text-fill-color: currentColor;
 }
 
+/* Prevent iOS auto-link coloring */
+body{
+  -webkit-text-size-adjust: 100%;
+}
+
+
 /* ===== HERO ===== */
 .hero img{
   width: 100%;
