@@ -67,8 +67,8 @@ function youtubeEmbedUrl(id, { autoplay=false, mute=false, loop=false, controls=
 }
 
 // ===== NAV ACTIVE STATE =====
-function setActiveNav(){
-  const page = document.body?.dataset?.page;
+function ActiveNav(){
+  const page = document.body?.data?.page;
   if (!page) return;
 
   document.querySelectorAll(".navlink").forEach(link => {
@@ -250,14 +250,21 @@ function closeLightbox() {
 }
 
 // ===== INIT =====
-(function init(){
-  setActiveNav();
+function setActiveNav(){
+  const path = window.location.pathname;
 
-  const page = document.body?.dataset?.page;
-  if (page === "home") renderHome();
-  if (page === "gallery") {
-    renderFilters();
-    renderGrid();
-  }
-})();
+  document.querySelectorAll(".navlink").forEach(link => {
+    link.classList.remove("is-active");
+
+    const href = link.getAttribute("href");
+
+    if (
+      (href === "index.html" && (path === "/" || path.endsWith("index.html"))) ||
+      (href === "gallery.html" && path.endsWith("gallery.html"))
+    ) {
+      link.classList.add("is-active");
+    }
+  });
+}
+
 
