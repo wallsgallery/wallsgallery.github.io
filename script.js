@@ -1,17 +1,14 @@
-// ====== EDIT WORKS HERE (add more later) ======
+// ====== EDIT WORKS HERE ======
 const YT_URL = "https://www.youtube.com/watch?v=xvFZjo5PgG0";
-const YT_ID = "xvFZjo5PgG0"; // replace later
+const YT_ID = "xvFZjo5PgG0";
 
-// Each image work: file in /images + share page in /view/<view>.html
 const WORKS = [
   { type: "image", artist: "Brandon Andrade", file: "brandonandrade1.jpg", caption: "Brandon Andrade — work 1", view: "brandonandrade1.html" },
-  { type: "image", artist: "D4IKON",          file: "d4ikon1.jpg",         caption: "D4IKON — work 1",          view: "d4ikon1.html" },
-  { type: "image", artist: "Gambit_one",      file: "gambitone1.jpg",      caption: "Gambit_one — work 1",      view: "gambitone1.html" },
-  { type: "image", artist: "Hunter Pacheco",  file: "hunterpacheco1.jpg",  caption: "Hunter Pacheco — work 1",  view: "hunterpacheco1.html" },
-  { type: "image", artist: "Jasmine Phan",    file: "jasminephan1.jpg",    caption: "Jasmine Phan — work 1",    view: "jasminephan1.html" },
-  { type: "image", artist: "Mariah Hall",     file: "mariahhall1.jpg",     caption: "Mariah Hall — work 1",     view: "mariahhall1.html" },
-
-  // Video
+  { type: "image", artist: "D4IKON", file: "d4ikon1.jpg", caption: "D4IKON — work 1", view: "d4ikon1.html" },
+  { type: "image", artist: "Gambit_one", file: "gambitone1.jpg", caption: "Gambit_one — work 1", view: "gambitone1.html" },
+  { type: "image", artist: "Hunter Pacheco", file: "hunterpacheco1.jpg", caption: "Hunter Pacheco — work 1", view: "hunterpacheco1.html" },
+  { type: "image", artist: "Jasmine Phan", file: "jasminephan1.jpg", caption: "Jasmine Phan — work 1", view: "jasminephan1.html" },
+  { type: "image", artist: "Mariah Hall", file: "mariahhall1.jpg", caption: "Mariah Hall — work 1", view: "mariahhall1.html" },
   { type: "video", artist: "DanyoInaki", youtubeId: YT_ID, caption: "DanyoInaki — video", shareUrl: YT_URL }
 ];
 
@@ -24,74 +21,59 @@ function viewUrlFor(work) {
   return `${siteOrigin()}/view/${work.view}`;
 }
 
-async function shareLink(url, text = "") {
+async function shareLink(url) {
   try {
     if (navigator.share) {
-      await navigator.share({ title: document.title, text, url });
+      await navigator.share({ url });
       return;
     }
-  } catch (_) {}
+  } catch {}
 
-  try {
-    await navigator.clipboard.writeText(url);
-    alert("Link copied.");
-  } catch (_) {
-    const ta = document.createElement("textarea");
-    ta.value = url;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
-    alert("Link copied.");
-  }
+  await navigator.clipboard.writeText(url);
+  alert("Link copied.");
 }
 
 function uniqArtists(works) {
   return [...new Set(works.map(w => w.artist))];
 }
 
-function youtubeEmbedUrl(id, { autoplay=false, mute=false, loop=false, controls=true } = {}) {
-  const params = new URLSearchParams({
+function youtubeEmbedUrl(id, opts = {}) {
+  const p = new URLSearchParams({
     rel: "0",
     modestbranding: "1",
     playsinline: "1",
-    autoplay: autoplay ? "1" : "0",
-    mute: mute ? "1" : "0",
-    controls: controls ? "1" : "0"
+    autoplay: opts.autoplay ? "1" : "0",
+    mute: opts.mute ? "1" : "0",
+    controls: opts.controls ? "1" : "0"
   });
 
-  if (loop) {
-    params.set("loop", "1");
-    params.set("playlist", id);
+  if (opts.loop) {
+    p.set("loop", "1");
+    p.set("playlist", id);
   }
 
-  return `https://www.youtube.com/embed/${id}?${params.toString()}`;
+  return `https://www.youtube.com/embed/${id}?${p}`;
 }
 
-// ===== NAV ACTIVE STATE (ROBUST) =====
-function setActiveNav(){
-  const path = window.location.pathname;
+// ===== NAV ACTIVE =====
+function setActiveNav() {
+  const path = location.pathname;
 
   document.querySelectorAll(".navlink").forEach(link => {
     link.classList.remove("is-active");
 
     const href = link.getAttribute("href");
 
-    const isHome =
-      href === "index.html" &&
-      (path === "/" || path.endsWith("/index.html"));
-
-    const isGallery =
-      href === "gallery.html" &&
-      path.endsWith("/gallery.html");
-
-    if (isHome || isGallery) {
+    if (
+      (href === "index.html" && (path === "/" || path.endsWith("index.html"))) ||
+      (href === "gallery.html" && path.endsWith("gallery.html"))
+    ) {
       link.classList.add("is-active");
     }
   });
 }
 
-// ===== HOME RENDER =====
+// ===== HOME =====
 function renderHome() {
   const feed = document.getElementById("homeFeed");
   if (!feed) return;
@@ -104,37 +86,26 @@ function renderHome() {
     media.className = "home-media";
 
     if (work.type === "image") {
-      const img = document.createElement("img");
-      img.src = `images/${work.file}`;
-      img.alt = "";
-      media.appendChild(img);
+      media.innerHTML = `<img src="images/${work.file}" alt="">`;
     } else {
-      const wrap = document.createElement("div");
-      wrap.className = "ytwrap";
-      const iframe = document.createElement("iframe");
-      iframe.src = youtubeEmbedUrl(work.youtubeId, { autoplay: true, mute: true, loop: true, controls: false });
-      iframe.allow = "autoplay; encrypted-media; picture-in-picture";
-      iframe.allowFullscreen = true;
-      wrap.appendChild(iframe);
-      media.appendChild(wrap);
+      media.innerHTML = `
+        <div class="ytwrap">
+          <iframe src="${youtubeEmbedUrl(work.youtubeId, { autoplay:true, mute:true, loop:true })}"
+                  allow="autoplay; encrypted-media"
+                  allowfullscreen></iframe>
+        </div>`;
     }
 
     const caption = document.createElement("div");
     caption.className = "home-caption";
-    caption.textContent = work.caption || "";
+    caption.textContent = work.caption;
 
     const actions = document.createElement("div");
     actions.className = "actions";
+    actions.innerHTML = `<button class="sharebtn">Share</button>`;
+    actions.firstChild.onclick = () =>
+      shareLink(work.type === "image" ? viewUrlFor(work) : work.shareUrl);
 
-    const btn = document.createElement("button");
-    btn.className = "sharebtn";
-    btn.textContent = "Share";
-
-    btn.onclick = async () => {
-      await shareLink(work.type === "image" ? viewUrlFor(work) : work.shareUrl);
-    };
-
-    actions.appendChild(btn);
     item.append(media, caption, actions);
     feed.appendChild(item);
   });
@@ -142,7 +113,6 @@ function renderHome() {
 
 // ===== GALLERY =====
 let currentFilter = "all";
-let currentWork = null;
 
 function renderFilters() {
   const holder = document.getElementById("artistFilters");
@@ -157,17 +127,18 @@ function renderFilters() {
     holder.appendChild(btn);
   });
 
-  document
-    .querySelector('[data-filter="all"]')
-    ?.addEventListener("click", () => setFilter("all"));
+  document.querySelector('[data-filter="all"]')?.onclick =
+    () => setFilter("all");
 }
 
 function setFilter(filter) {
   currentFilter = filter;
 
-  document.querySelectorAll(".filterbtn").forEach(b => b.classList.remove("is-active"));
+  document.querySelectorAll(".filterbtn")
+    .forEach(b => b.classList.remove("is-active"));
+
   document
-    .querySelector(`.filterbtn[data-filter="${CSS.escape(filter)}"]`)
+    .querySelector(`.filterbtn[data-filter="${filter}"]`)
     ?.classList.add("is-active");
 
   renderGrid();
@@ -185,31 +156,10 @@ function renderGrid() {
       const tile = document.createElement("div");
       tile.className = "tile";
 
-      const thumb = document.createElement("div");
-      thumb.className = "thumb";
-
-      if (work.type === "image") {
-        const img = document.createElement("img");
-        img.src = `images/${work.file}`;
-        thumb.appendChild(img);
-      } else {
-        const box = document.createElement("div");
-        box.textContent = "VIDEO";
-        box.style.aspectRatio = "16/9";
-        box.style.display = "flex";
-        box.style.alignItems = "center";
-        box.style.justifyContent = "center";
-        thumb.appendChild(box);
-      }
-
-      tile.appendChild(thumb);
-
-      if (work.type === "video") {
-        const label = document.createElement("div");
-        label.className = "vlabel";
-        label.textContent = work.artist;
-        tile.appendChild(label);
-      }
+      tile.innerHTML =
+        work.type === "image"
+          ? `<div class="thumb"><img src="images/${work.file}" alt=""></div>`
+          : `<div class="thumb"><div style="aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;">VIDEO</div></div>`;
 
       tile.onclick = () => openLightbox(work);
       grid.appendChild(tile);
@@ -220,51 +170,35 @@ function renderGrid() {
 function openLightbox(work) {
   const lb = document.getElementById("lightbox");
   const media = document.getElementById("lbMedia");
-  const share = document.getElementById("lbShare");
 
-  currentWork = work;
-  media.innerHTML = "";
+  media.innerHTML =
+    work.type === "image"
+      ? `<img src="images/${work.file}" alt="">`
+      : `<div class="ytwrap"><iframe src="${youtubeEmbedUrl(work.youtubeId,{controls:true})}" allowfullscreen></iframe></div>`;
 
-  if (work.type === "image") {
-    const img = document.createElement("img");
-    img.src = `images/${work.file}`;
-    media.appendChild(img);
-  } else {
-    const wrap = document.createElement("div");
-    wrap.className = "ytwrap";
-    const iframe = document.createElement("iframe");
-    iframe.src = youtubeEmbedUrl(work.youtubeId, { controls: true });
-    iframe.allow = "autoplay; encrypted-media; picture-in-picture";
-    iframe.allowFullscreen = true;
-    wrap.appendChild(iframe);
-    media.appendChild(wrap);
-  }
-
-  share.onclick = () =>
-    shareLink(work.type === "image" ? viewUrlFor(work) : work.shareUrl);
+  document.getElementById("lbShare").onclick =
+    () => shareLink(work.type === "image" ? viewUrlFor(work) : work.shareUrl);
 
   lb.style.display = "flex";
   document.body.style.overflow = "hidden";
-
   document.getElementById("lbClose").onclick = closeLightbox;
-  window.addEventListener("keydown", e => e.key === "Escape" && closeLightbox(), { once: true });
 }
 
 function closeLightbox() {
   document.getElementById("lightbox").style.display = "none";
   document.getElementById("lbMedia").innerHTML = "";
   document.body.style.overflow = "";
-  currentWork = null;
 }
 
 // ===== INIT =====
-(function init(){
+(function () {
   setActiveNav();
 
-  const page = document.body?.dataset?.page;
+  const page = document.body.dataset.page;
   if (page === "home") renderHome();
   if (page === "gallery") {
     renderFilters();
     renderGrid();
   }
 })();
+
