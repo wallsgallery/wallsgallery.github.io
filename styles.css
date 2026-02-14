@@ -109,6 +109,16 @@ body[data-page="gallery"] .navlink[href="gallery.html"]{
   text-underline-offset: 6px;
 }
 
+/* ===== HERO CLICK SWAP ===== */
+.hero img{
+  cursor: pointer;
+  transition: opacity 0.45s ease;
+}
+
+.hero img.is-fading{
+  opacity: 0;
+}
+
 /* ===== COUNTDOWN BAR ===== */
 .countdown-bar{
   display: flex;
